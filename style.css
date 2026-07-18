@@ -718,17 +718,35 @@ input:focus-visible {
 }
 
 /* Su mobile: gap compatti, righe delle card a quota fissa condivisa
-   (repeat 1fr) così le 6 card hanno tutte la stessa altezza, e padding
-   ridotto perché a ~158px di larghezza i 24px standard soffocano il testo */
+   (repeat 1fr) così le 6 card hanno tutte la stessa altezza.
+   Nelle colonne strette (~150px) il font scende a 13px e le parole
+   lunghe ("digitalizzazione", "trasformazione") vengono sillabate
+   invece di sbordare dalla card (richiesta 18/07: testi tagliati). */
 @media (max-width: 767.98px) {
+  /* Niente righe 1fr: forzare TUTTE le card all'altezza della più
+     lunga le allungava troppo. Le card affiancate nella stessa riga
+     restano comunque identiche (stretch naturale della griglia). */
   .servizi-pillars__grid {
-    column-gap: 16px;
-    row-gap: 16px;
-    grid-template-rows: auto repeat(3, 1fr);
+    column-gap: 14px;
+    row-gap: 14px;
   }
 
   .servizi-card {
-    padding: 14px 12px;
+    padding: 14px 10px;
+  }
+
+  .servizi-card__title {
+    font-size: 13px;
+    margin-bottom: 8px;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  .servizi-card__text {
+    font-size: 13px;
+    line-height: 1.45;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 }
 
@@ -937,7 +955,6 @@ input:focus-visible {
    e numero/titolo scalano per stare in proporzione. */
 @media (max-width: 639px) {
   .metodo-360__grid {
-    grid-auto-rows: 1fr;
     gap: 12px;
   }
 
@@ -946,23 +963,35 @@ input:focus-visible {
   }
 
   .metodo-card__head {
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 10px;
   }
 
   .metodo-card__num {
-    width: 34px;
-    height: 34px;
-    font-size: 15px;
-    border-radius: 8px;
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+    border-radius: 7px;
   }
 
+  /* Accanto al numero restano ~100px: "Organizzazione" non ci sta su
+     una riga a nessun corpo ragionevole, quindi va sillabato.
+     min-width: 0 è indispensabile: da flex item il titolo ha
+     min-width: auto e sborderebbe dalla card invece di andare a capo. */
   .metodo-card__title {
-    font-size: 17px;
+    flex: 1;
+    min-width: 0;
+    font-size: 15px;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 
   .metodo-card__text {
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.45;
+    overflow-wrap: break-word;
+    hyphens: auto;
   }
 }
 
@@ -1443,6 +1472,20 @@ input:focus-visible {
   grid-template-columns: 1fr;
   gap: 32px;
   margin-top: clamp(32px, 5.7vw, 58px);
+}
+
+/* Su mobile le card a tutta larghezza (335px, foto 502px di altezza)
+   dominavano lo schermo: contenute a 280px e centrate (richiesta 18/07) */
+@media (max-width: 639px) {
+  .team__grid {
+    max-width: 280px;
+    margin-inline: auto;
+    gap: 24px;
+  }
+
+  .team-card {
+    padding: 18px 18px 24px;
+  }
 }
 
 @media (min-width: 640px) {
