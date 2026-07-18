@@ -99,6 +99,17 @@ button {
   padding-inline: clamp(20px, 14.26vw, 146px);
 }
 
+/* Su schermi piccoli la parte fluida del clamp (12.5vw ≈ 47px a 375px)
+   mangia un quarto della larghezza: padding fisso, contenuto più largo.
+   Senza questo, il banner CTA restava largo ~281px e il bottone lungo
+   del Metodo (323px) sbordava. */
+@media (max-width: 639px) {
+  .container,
+  .container--narrow {
+    padding-inline: 20px;
+  }
+}
+
 /* Visible keyboard focus everywhere */
 a:focus-visible,
 button:focus-visible,
@@ -499,17 +510,13 @@ input:focus-visible {
   text-align: center;
 }
 
+/* Due colonne anche su mobile (richiesta 18/07: la colonna singola
+   allungava troppo la pagina rispetto alla resa desktop) */
 .sfide__grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr);
   row-gap: clamp(28px, 5.76vw, 59px);
-  column-gap: clamp(20px, 8vw, 82px);
-}
-
-@media (min-width: 640px) {
-  .sfide__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  column-gap: clamp(16px, 8vw, 82px);
 }
 
 @media (min-width: 1024px) {
@@ -884,18 +891,27 @@ input:focus-visible {
 
 /* Griglia 2x2 delle card numerate (Persone/Processi/Organizzazione/Tecnologia):
    gap orizzontale nettamente più largo di quello verticale, come nel PDF sorgente */
+/* Due colonne a ogni larghezza (richiesta 18/07: su mobile le 4 card
+   numerate stavano in colonna singola) */
 .metodo-360__grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 18px;
   margin-top: clamp(28px, 4.5vw, 46px);
 }
 
 @media (min-width: 640px) {
   .metodo-360__grid {
-    grid-template-columns: repeat(2, 1fr);
     column-gap: clamp(32px, 7.5vw, 76px);
     row-gap: 18px;
+  }
+}
+
+/* Sotto i 640px le card sono larghe ~158px: il padding standard di 24px
+   lascerebbe ~110px al testo */
+@media (max-width: 639px) {
+  .metodo-card {
+    padding: 16px;
   }
 }
 
@@ -967,6 +983,47 @@ input:focus-visible {
   display: flex;
   align-items: center;
   gap: 18px;
+}
+
+/* Sotto i 900px i pallini sono collegati da una linea verticale, come
+   lo sono orizzontalmente a desktop (richiesta 18/07). Il distanziamento
+   passa dal gap del flex al padding dei singoli step, così ogni step può
+   disegnare il proprio segmento di linea senza buchi in corrispondenza
+   dei gap. Racchiuso in media query: da 900px in su gli step diventano
+   display:contents e un ::before diventerebbe un item della griglia. */
+@media (max-width: 899.98px) {
+  .metodo-timeline {
+    gap: 0;
+  }
+
+  .metodo-timeline__step {
+    position: relative;
+    padding-block: 14px;
+  }
+
+  /* Il pallino è largo 34px: centro a 17px, linea da 3px → left 15.5px */
+  .metodo-timeline__step::before {
+    content: "";
+    position: absolute;
+    left: 15.5px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--color-lime);
+  }
+
+  .metodo-timeline__step:first-child::before {
+    top: 50%;
+  }
+
+  .metodo-timeline__step:last-child::before {
+    bottom: 50%;
+  }
+
+  .metodo-timeline__dot {
+    position: relative;
+    z-index: 1;
+  }
 }
 
 .metodo-timeline__dot {
@@ -1287,6 +1344,20 @@ input:focus-visible {
 
 .cta-banner .btn-light {
   color: var(--color-teal);
+}
+
+/* Su schermi stretti il bottone lungo del Metodo ("RICHIEDI L'ASSESSMENT
+   DI MATURITÀ") non ci sta su una riga: gli si permette di andare a capo
+   invece di sbordare dal banner (il .btn globale ha white-space: nowrap) */
+@media (max-width: 639px) {
+  .cta-banner {
+    padding-inline: 16px;
+  }
+
+  .cta-banner .btn {
+    white-space: normal;
+    max-width: 100%;
+  }
 }
 
 /* ==========================================================================
