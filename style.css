@@ -514,14 +514,28 @@ input:focus-visible {
    allungava troppo la pagina rispetto alla resa desktop) */
 .sfide__grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   row-gap: clamp(28px, 5.76vw, 59px);
   column-gap: clamp(16px, 8vw, 82px);
 }
 
+/* Su mobile la griglia non usa tutta la larghezza: card un po' più
+   piccole (richiesta 18/07: "occupano troppo spazio") */
+@media (max-width: 639px) {
+  .sfide__grid {
+    max-width: 300px;
+    margin-inline: auto;
+    row-gap: 24px;
+  }
+
+  .sfida-card__caption {
+    margin-top: 12px;
+  }
+}
+
 @media (min-width: 1024px) {
   .sfide__grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -693,34 +707,42 @@ input:focus-visible {
    L'ordine nel DOM resta raggruppato per colonna (Persone poi Tecnologia) così
    su mobile (colonna singola) lo stacking segue l'ordine di lettura naturale;
    a desktop il posizionamento riga/colonna è esplicito via nth-child. */
+/* Due colonne Persone | Tecnologia a ogni larghezza (richiesta 18/07:
+   prima sotto i 768px le card si impilavano in colonna singola).
+   Il posizionamento esplicito per colonna è più sotto, fuori media query. */
 .servizi-pillars__grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(40px, 14.65vw, 150px);
   row-gap: clamp(28px, 5.4vw, 55px);
 }
 
+/* Su mobile: gap compatti, righe delle card a quota fissa condivisa
+   (repeat 1fr) così le 6 card hanno tutte la stessa altezza, e padding
+   ridotto perché a ~158px di larghezza i 24px standard soffocano il testo */
 @media (max-width: 767.98px) {
-  #servizi-tecnologia-title {
-    margin-top: 24px;
-  }
-}
-
-@media (min-width: 768px) {
   .servizi-pillars__grid {
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: clamp(40px, 14.65vw, 150px);
-    row-gap: clamp(28px, 5.4vw, 56px);
+    column-gap: 16px;
+    row-gap: 16px;
+    grid-template-rows: auto repeat(3, 1fr);
   }
 
-  .servizi-pillars__grid > :nth-child(1) { grid-column: 1; grid-row: 1; }
-  .servizi-pillars__grid > :nth-child(2) { grid-column: 1; grid-row: 2; }
-  .servizi-pillars__grid > :nth-child(3) { grid-column: 1; grid-row: 3; }
-  .servizi-pillars__grid > :nth-child(4) { grid-column: 1; grid-row: 4; }
-  .servizi-pillars__grid > :nth-child(5) { grid-column: 2; grid-row: 1; }
-  .servizi-pillars__grid > :nth-child(6) { grid-column: 2; grid-row: 2; }
-  .servizi-pillars__grid > :nth-child(7) { grid-column: 2; grid-row: 3; }
-  .servizi-pillars__grid > :nth-child(8) { grid-column: 2; grid-row: 4; }
+  .servizi-card {
+    padding: 14px 12px;
+  }
 }
+
+/* Posizionamento esplicito: titolo+3 card "Persone" in colonna 1,
+   titolo+3 card "Tecnologia" in colonna 2, righe sincronizzate.
+   Vale a ogni larghezza (prima era solo da 768px in su). */
+.servizi-pillars__grid > :nth-child(1) { grid-column: 1; grid-row: 1; }
+.servizi-pillars__grid > :nth-child(2) { grid-column: 1; grid-row: 2; }
+.servizi-pillars__grid > :nth-child(3) { grid-column: 1; grid-row: 3; }
+.servizi-pillars__grid > :nth-child(4) { grid-column: 1; grid-row: 4; }
+.servizi-pillars__grid > :nth-child(5) { grid-column: 2; grid-row: 1; }
+.servizi-pillars__grid > :nth-child(6) { grid-column: 2; grid-row: 2; }
+.servizi-pillars__grid > :nth-child(7) { grid-column: 2; grid-row: 3; }
+.servizi-pillars__grid > :nth-child(8) { grid-column: 2; grid-row: 4; }
 
 .servizi-column__title {
   font-family: var(--font-title);
@@ -895,7 +917,9 @@ input:focus-visible {
    numerate stavano in colonna singola) */
 .metodo-360__grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* minmax(0, 1fr) e non 1fr: senza, la parola lunga "Organizzazione"
+     alza il min-content della sua colonna e le card escono asimmetriche */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
   margin-top: clamp(28px, 4.5vw, 46px);
 }
@@ -908,10 +932,37 @@ input:focus-visible {
 }
 
 /* Sotto i 640px le card sono larghe ~158px: il padding standard di 24px
-   lascerebbe ~110px al testo */
+   lascerebbe ~110px al testo. grid-auto-rows: 1fr le porta tutte
+   all'altezza della più alta (richiesta 18/07: "stessa grandezza"),
+   e numero/titolo scalano per stare in proporzione. */
 @media (max-width: 639px) {
+  .metodo-360__grid {
+    grid-auto-rows: 1fr;
+    gap: 12px;
+  }
+
   .metodo-card {
-    padding: 16px;
+    padding: 16px 14px;
+  }
+
+  .metodo-card__head {
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .metodo-card__num {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+    border-radius: 8px;
+  }
+
+  .metodo-card__title {
+    font-size: 17px;
+  }
+
+  .metodo-card__text {
+    font-size: 14px;
   }
 }
 
