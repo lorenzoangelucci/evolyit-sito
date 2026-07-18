@@ -717,36 +717,15 @@ input:focus-visible {
   row-gap: clamp(28px, 5.4vw, 55px);
 }
 
-/* Su mobile: gap compatti, righe delle card a quota fissa condivisa
-   (repeat 1fr) così le 6 card hanno tutte la stessa altezza.
-   Nelle colonne strette (~150px) il font scende a 13px e le parole
-   lunghe ("digitalizzazione", "trasformazione") vengono sillabate
-   invece di sbordare dalla card (richiesta 18/07: testi tagliati). */
+/* Su mobile: gap compatti e TUTTE le 6 card alla stessa altezza
+   (righe 1fr — richiesta 18/07: "stessa grandezza").
+   Le regole tipografiche delle card sono più sotto, DOPO le regole
+   base di .servizi-card: prima venivano scavalcate dalla cascata. */
 @media (max-width: 767.98px) {
-  /* Niente righe 1fr: forzare TUTTE le card all'altezza della più
-     lunga le allungava troppo. Le card affiancate nella stessa riga
-     restano comunque identiche (stretch naturale della griglia). */
   .servizi-pillars__grid {
     column-gap: 14px;
     row-gap: 14px;
-  }
-
-  .servizi-card {
-    padding: 14px 10px;
-  }
-
-  .servizi-card__title {
-    font-size: 13px;
-    margin-bottom: 8px;
-    overflow-wrap: break-word;
-    hyphens: auto;
-  }
-
-  .servizi-card__text {
-    font-size: 13px;
-    line-height: 1.45;
-    overflow-wrap: break-word;
-    hyphens: auto;
+    grid-template-rows: auto repeat(3, 1fr);
   }
 }
 
@@ -818,6 +797,29 @@ input:focus-visible {
   font-weight: 400;
   font-size: 15px;
   line-height: 1.5;
+}
+
+/* Mobile: nelle colonne strette (~150px) il font scende a 13px e il
+   padding si riduce. Questo blocco deve stare DOPO le regole base qui
+   sopra (stessa specificità: vince l'ordine). NIENTE sillabazione, le
+   parole vanno a capo intere (feedback 18/07). overflow-wrap resta come
+   rete di sicurezza: interviene solo se una parola da sola non entra. */
+@media (max-width: 767.98px) {
+  .servizi-card {
+    padding: 14px 10px;
+  }
+
+  .servizi-card__title {
+    font-size: 13px;
+    margin-bottom: 8px;
+    overflow-wrap: break-word;
+  }
+
+  .servizi-card__text {
+    font-size: 13px;
+    line-height: 1.45;
+    overflow-wrap: break-word;
+  }
 }
 
 /* Banner CTA finale (servizi.html): riquadro teal arrotondato con bottone */
@@ -956,42 +958,8 @@ input:focus-visible {
 @media (max-width: 639px) {
   .metodo-360__grid {
     gap: 12px;
-  }
-
-  .metodo-card {
-    padding: 16px 14px;
-  }
-
-  .metodo-card__head {
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-
-  .metodo-card__num {
-    width: 28px;
-    height: 28px;
-    font-size: 13px;
-    border-radius: 7px;
-  }
-
-  /* Accanto al numero restano ~100px: "Organizzazione" non ci sta su
-     una riga a nessun corpo ragionevole, quindi va sillabato.
-     min-width: 0 è indispensabile: da flex item il titolo ha
-     min-width: auto e sborderebbe dalla card invece di andare a capo. */
-  .metodo-card__title {
-    flex: 1;
-    min-width: 0;
-    font-size: 15px;
-    line-height: 1.2;
-    overflow-wrap: break-word;
-    hyphens: auto;
-  }
-
-  .metodo-card__text {
-    font-size: 13px;
-    line-height: 1.45;
-    overflow-wrap: break-word;
-    hyphens: auto;
+    /* Tutte e 4 le card alla stessa altezza (richiesta 18/07) */
+    grid-auto-rows: 1fr;
   }
 }
 
@@ -1044,6 +1012,44 @@ input:focus-visible {
   font-size: 15px;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.92);
+}
+
+/* Mobile: card strette (~160px). Questo blocco deve stare DOPO le
+   regole base qui sopra (stessa specificità: vince l'ordine).
+   Numero SOPRA il titolo invece che a fianco: accanto al numero
+   restavano ~100px e "Organizzazione" finiva spezzata (feedback
+   18/07). A tutta larghezza i titoli stanno su una riga intera,
+   senza trattini. */
+@media (max-width: 639px) {
+  .metodo-card {
+    padding: 16px 14px;
+  }
+
+  .metodo-card__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .metodo-card__num {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+    border-radius: 7px;
+  }
+
+  .metodo-card__title {
+    font-size: 14px;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+  }
+
+  .metodo-card__text {
+    font-size: 13px;
+    line-height: 1.45;
+    overflow-wrap: break-word;
+  }
 }
 
 /* ==========================================================================
