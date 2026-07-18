@@ -1,0 +1,92 @@
+/* ==========================================================================
+   ⚠️ LIVELLO DI PROVA — 16/07/2026 (ricostruito il 18/07/2026 dalle note
+   dell'HANDOFF, sezione 3-bis: il file originale non era presente
+   nell'esportazione da Google Drive)
+
+   Modifiche sperimentali in valutazione, tenute FUORI da style.css su
+   richiesta dell'utente ("voglio fare una prova, quindi fai in modo che
+   queste modifiche siano eliminabili poi").
+
+   Vince per ORDINE DI CASCATA (caricato dopo style.css), non per
+   specificità né !important: rimuoverlo non lascia residui.
+   I valori originali sono annotati in commento accanto a ogni regola.
+
+   PER ELIMINARE LA PROVA:
+   1. Cancellare questo file
+   2. Togliere il <link rel="stylesheet" href="style-prova.css"> (e il
+      commento "PROVA" che lo precede) dalle 10 pagine:
+      index.html, servizi.html, metodo.html, chi-siamo.html
+      + le 6 pagine in /pagine/ (path ../style-prova.css)
+   3. Ripristinare i 2 src in chi-siamo.html:
+      team-photo-placeholder-prova.svg → team-photo-placeholder.svg
+   4. Cancellare assets/images/team-photo-placeholder-prova.svg
+
+   PER RENDERLA DEFINITIVA:
+   travasare queste regole in style.css al posto dei valori originali,
+   poi eseguire comunque i passi 1-2 (e decidere quale SVG tenere).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Pagine più larghe — contenuto utile da 768px a 992px (+29%).
+      Agisce su tutte le pagine: sono variabili di :root usate da .container.
+   -------------------------------------------------------------------------- */
+:root {
+  --container-width: 1200px;                       /* originale: 1024px */
+  --container-padding: clamp(20px, 12.5vw, 104px); /* originale: max 128px */
+}
+
+/* Riscalato in proporzione al nuovo container (146/1024 → 118/1200) */
+.container--narrow {
+  padding-inline: clamp(20px, 14.26vw, 118px);     /* originale: max 146px */
+}
+
+/* --------------------------------------------------------------------------
+   2. Footer omogeneo — da 720px in su la griglia 1fr auto 1fr aveva solo
+      due blocchi (contatti in col.1, logo in col.2, col.3 vuota): tutto
+      ammassato nella metà sinistra. Ora colonna unica centrata: logo sopra,
+      "Contatti" sotto, le 4 voci su una riga (vanno a capo sotto ~900px).
+   -------------------------------------------------------------------------- */
+@media (min-width: 720px) {
+  .footer__grid {
+    grid-template-columns: 1fr;   /* originale: 1fr auto 1fr */
+    justify-items: center;
+    text-align: center;           /* originale: left */
+    gap: 28px;                    /* originale: 48px */
+  }
+
+  .footer__col--brand {
+    order: -1;                    /* logo sopra i contatti (originale: 0) */
+  }
+
+  .footer__list {
+    flex-direction: row;          /* originale: column */
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;          /* originale: flex-start */
+    column-gap: 28px;
+  }
+}
+
+/* A 12px l'indirizzo era poco leggibile */
+.footer__list {
+  font-size: 14px;                /* originale: 12px */
+}
+
+/* --------------------------------------------------------------------------
+   3. Icone segnaposto di Chi Siamo — unico punto della prova che tocca
+      l'HTML (l'attributo src non è pilotabile da CSS): i 2 <img> in
+      chi-siamo.html usano team-photo-placeholder-prova.svg (sagoma al 52%
+      della larghezza, centrata, con aria intorno) invece dell'originale
+      team-photo-placeholder.svg (sagoma 294/362, appoggiata al bordo
+      inferiore). Il file originale NON è stato toccato.
+   -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   4. Hero di Servizi — testo spostato di 29px a destra e 40px in alto.
+   -------------------------------------------------------------------------- */
+@media (min-width: 900px) {
+  .servizi-hero__content {
+    left: 10vw;                   /* originale: 8vw */
+    top: -40px;                   /* originale: nessun top */
+  }
+}
